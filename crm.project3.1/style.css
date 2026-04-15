@@ -1,0 +1,40 @@
+body {
+  font-family: Arial;
+  background: #f4f6f9;
+  padding: 20px;
+}
+
+input {
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 200px;
+}
+
+table {
+  width: 100%;
+  background: white;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #f5f6fa;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 8px;
+  color: white;
+  font-size: 12px;
+}
+
+.new { background: #3498db; }
+.progress { background: #f39c12; }
+.done { background: #2ecc71; }
