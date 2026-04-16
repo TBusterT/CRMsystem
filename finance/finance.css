@@ -1,0 +1,98 @@
+/* Стилі специфічні для сторінки Фінансів */
+
+.transactions-section {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    flex: 1;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* Стилізація поля пошуку */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 16px;
+    width: 250px;
+}
+
+.search-box i {
+    color: var(--text-muted);
+    margin-right: 10px;
+}
+
+.search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+/* Таблиця транзакцій */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background: var(--sidebar-bg);
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.data-table td {
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.data-table td strong {
+    font-weight: 600;
+}
+
+/* Кольорові бейджі для фінансів */
+.badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge.income {
+    background: #d1fae5;
+    color: #059669; /* Зелений для доходів */
+}
+
+.badge.expense {
+    background: #fee2e2;
+    color: #dc2626; /* Червоний для витрат */
+}
+
+.amount-income { color: #059669; font-weight: 600; }
+.amount-expense { color: #dc2626; font-weight: 600; }
