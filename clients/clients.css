@@ -1,0 +1,136 @@
+/* Панель інструментів (Пошук та Фільтр) */
+.toolbar-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-box i { color: var(--text-muted); margin-right: 12px; }
+.search-box input { border: none; outline: none; width: 100%; font-size: 15px; color: var(--text-main); }
+
+.filter-box select {
+    padding: 12px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: white;
+    color: var(--text-main);
+    font-size: 15px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.add-btn {
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.add-btn:hover { background: #2563eb; transform: translateY(-2px); }
+
+/* Сітка карток клієнтів */
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    padding-bottom: 30px;
+}
+
+.client-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.client-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    border-color: #cbd5e1;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.client-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.client-info h3 { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+.client-info .company { font-size: 13px; color: var(--text-muted); }
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active { background: #d1fae5; color: #059669; }
+.status-lead { background: #fef3c7; color: #d97706; }
+.status-nego { background: #e0e7ff; color: #4f46e5; }
+
+.contact-details { margin-bottom: 20px; }
+.contact-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 14px; color: var(--text-muted); }
+.contact-item i { width: 16px; color: #94a3b8; }
+
+.card-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ltv-info span { display: block; font-size: 12px; color: var(--text-muted); }
+.ltv-info strong { font-size: 15px; color: var(--text-main); }
+
+.card-actions { display: flex; gap: 8px; }
+.card-actions button {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.card-actions button:hover { background: var(--bg-color); color: var(--accent-blue); border-color: var(--accent-blue); }
+
+.fade-in-card { animation: fadeInUp 0.5s ease forwards; opacity: 0; }

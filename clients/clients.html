@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Pro - Клієнтська база</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../main/main.css">
+  <link rel="stylesheet" href="clients.css">
+</head>
+<body>
+<div class="dashboard-container">
+
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon"><i class="fa-solid fa-table-columns"></i></div>
+      <div class="logo-text">
+        <h1>CRM Pro</h1>
+        <span>v2.1.0</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <p class="menu-label">Меню</p>
+      <a href="../main/index.html" class="menu-item">
+        <div class="item-icon blue-icon"><i class="fa-solid fa-house"></i></div>
+        <span>Головна</span>
+      </a>
+      <a href="clients.html" class="menu-item active">
+        <div class="item-icon green-icon"><i class="fa-solid fa-users"></i></div>
+        <span>Клієнти</span>
+      </a>
+      <a href="../inbox/inbox.html" class="menu-item">
+        <div class="item-icon" style="background-color: #0ea5e9;"><i class="fa-solid fa-message"></i></div>
+        <span>Повідомлення</span>
+      </a>
+      <a href="../inventory/inventory.html" class="menu-item">
+        <div class="item-icon purple-icon"><i class="fa-solid fa-box"></i></div>
+        <span>Товари</span>
+      </a>
+      <a href="../finance/finance.html" class="menu-item">
+        <div class="item-icon" style="background-color: #f59e0b;"><i class="fa-solid fa-wallet"></i></div>
+        <span>Фінанси</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-title">
+        <h2>База клієнтів</h2>
+        <span class="divider">|</span>
+        <span class="last-update">Управління контактами та лідами</span>
+      </div>
+      <div class="header-actions">
+        <button class="add-btn"><i class="fa-solid fa-plus"></i> Новий клієнт</button>
+      </div>
+    </header>
+
+    <section class="kpi-section">
+      <div class="kpi-card bg-teal fade-in-card">
+        <div class="kpi-header">
+          <h3>Всього контактів</h3>
+          <i class="fa-solid fa-address-book"></i>
+        </div>
+        <div class="kpi-value" id="kpi-total">0</div>
+      </div>
+      <div class="kpi-card bg-green fade-in-card" style="animation-delay: 0.1s;">
+        <div class="kpi-header">
+          <h3>Активні клієнти</h3>
+          <i class="fa-solid fa-user-check"></i>
+        </div>
+        <div class="kpi-value" id="kpi-active">0</div>
+      </div>
+      <div class="kpi-card bg-purple fade-in-card" style="animation-delay: 0.2s;">
+        <div class="kpi-header">
+          <h3>Нові ліди (Місяць)</h3>
+          <i class="fa-solid fa-fire"></i>
+        </div>
+        <div class="kpi-value" id="kpi-leads">0</div>
+      </div>
+    </section>
+
+    <section class="toolbar-section fade-in-card" style="animation-delay: 0.3s;">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchClient" placeholder="Пошук за ім'ям, компанією або email...">
+      </div>
+      <div class="filter-box">
+        <select id="statusFilter">
+          <option value="all">Всі статуси</option>
+          <option value="Активний">Активні</option>
+          <option value="Новий лід">Нові ліди</option>
+          <option value="В перемовинах">В перемовинах</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="clients-grid" id="clientsGrid">
+    </section>
+
+  </main>
+</div>
+
+<script src="clients.js"></script>
+</body>
+</html>

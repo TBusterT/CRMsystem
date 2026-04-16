@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Pro - Inbox</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../main/main.css">
+    <link rel="stylesheet" href="inbox.css">
+</head>
+<body>
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fa-solid fa-table-columns"></i></div>
+            <div class="logo-text">
+                <h1>CRM Pro</h1>
+                <span>v2.1.0</span>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <p class="menu-label">Меню</p>
+            <a href="../main/index.html" class="menu-item">
+                <div class="item-icon blue-icon"><i class="fa-solid fa-house"></i></div>
+                <span>Головна</span>
+            </a>
+            <a href="../clients/clients.html" class="menu-item">
+                <div class="item-icon green-icon"><i class="fa-solid fa-users"></i></div>
+                <span>Клієнти</span>
+            </a>
+            <a href="inbox.html" class="menu-item active">
+                <div class="item-icon" style="background-color: #0ea5e9;"><i class="fa-solid fa-message"></i></div>
+                <span>Повідомлення</span>
+            </a>
+            <a href="../inventory/inventory.html" class="menu-item">
+                <div class="item-icon purple-icon"><i class="fa-solid fa-box"></i></div>
+                <span>Товари</span>
+            </a>
+            <a href="../finance/finance.html" class="menu-item">
+                <div class="item-icon" style="background-color: #f59e0b;"><i class="fa-solid fa-wallet"></i></div>
+                <span>Фінанси</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content" style="padding: 0; background: white;">
+        <div class="inbox-layout">
+            <aside class="channels-sidebar">
+                <div class="sidebar-header">
+                    <div class="header-icon"><i class="fa-solid fa-inbox"></i></div>
+                    <div class="header-info">
+                        <h2>Inbox</h2>
+                        <span>42 нових</span>
+                    </div>
+                </div>
+
+                <div class="channels-list">
+                    <h3 class="list-title">Канали</h3>
+                    <div class="channel-item active">
+                        <div class="channel-icon telegram"><i class="fa-brands fa-telegram"></i></div>
+                        <div class="channel-details">
+                            <h4>Telegram</h4>
+                            <span>12 нових</span>
+                        </div>
+                    </div>
+                    <div class="channel-item">
+                        <div class="channel-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
+                        <div class="channel-details">
+                            <h4>WhatsApp</h4>
+                            <span>8 нових</span>
+                        </div>
+                    </div>
+                    <div class="channel-item">
+                        <div class="channel-icon viber"><i class="fa-brands fa-viber"></i></div>
+                        <div class="channel-details">
+                            <h4>Viber</h4>
+                            <span>5 нових</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="chat-area">
+                <header class="chat-header">
+                    <div class="contact-info">
+                        <div class="avatar client-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="contact-details">
+                            <h2>Іван Петров</h2>
+                            <span class="status">Онлайн</span>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="action-btn"><i class="fa-solid fa-phone"></i></button>
+                        <button class="action-btn"><i class="fa-solid fa-video"></i></button>
+                    </div>
+                </header>
+
+                <div class="chat-history" id="chatHistory">
+                    <div class="message incoming">
+                        <div class="avatar client-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="message-content">
+                            <div class="bubble">Добрий день! Мені потрібна консультація щодо ваших послуг.</div>
+                            <span class="time">14:30</span>
+                        </div>
+                    </div>
+
+                    <div class="message outgoing">
+                        <div class="message-content">
+                            <div class="bubble">Звичайно! Розкажіть, що вас цікавить?</div>
+                            <span class="time">14:32</span>
+                        </div>
+                        <div class="avatar manager-avatar"><i class="fa-solid fa-user"></i></div>
+                    </div>
+
+                    <div class="message incoming">
+                        <div class="avatar client-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="message-content">
+                            <div class="bubble">Мені потрібен детальний розрахунок вартості для мого проекту.</div>
+                            <span class="time">14:35</span>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="chat-input-area">
+                    <div class="input-wrapper">
+                        <button class="icon-btn text-muted"><i class="fa-solid fa-paperclip"></i></button>
+                        <input type="text" id="messageInput" placeholder="Введіть повідомлення..." autocomplete="off">
+                        <button class="icon-btn text-muted"><i class="fa-regular fa-face-smile"></i></button>
+                        <button class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="inbox.js"></script>
+</body>
+</html>

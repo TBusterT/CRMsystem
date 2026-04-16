@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Pro - Панель управління</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fa-solid fa-table-columns"></i></div>
+            <div class="logo-text">
+                <h1>CRM Pro</h1>
+                <span>v2.1.0</span>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <p class="menu-label">Меню</p>
+            <a href="index.html" class="menu-item active">
+                <div class="item-icon blue-icon"><i class="fa-solid fa-house"></i></div>
+                <span>Головна</span>
+            </a>
+            <a href="../clients/clients.html" class="menu-item">
+                <div class="item-icon green-icon"><i class="fa-solid fa-users"></i></div>
+                <span>Клієнти</span>
+            </a>
+            <a href="../inbox/inbox.html" class="menu-item">
+                <div class="item-icon" style="background-color: #0ea5e9;"><i class="fa-solid fa-message"></i></div>
+                <span>Повідомлення</span>
+            </a>
+            <a href="../inventory/inventory.html" class="menu-item">
+                <div class="item-icon purple-icon"><i class="fa-solid fa-box"></i></div>
+                <span>Товари</span>
+            </a>
+            <a href="../finance/finance.html" class="menu-item">
+                <div class="item-icon" style="background-color: #f59e0b;"><i class="fa-solid fa-wallet"></i></div>
+                <span>Фінанси</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-title">
+                <h2>Панель управління</h2>
+                <span class="divider">|</span>
+                <span class="last-update">Останнє оновлення: <span id="time-ago">щойно</span></span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <button class="profile-btn"><i class="fa-solid fa-user"></i></button>
+            </div>
+        </header>
+
+        <section class="kpi-section">
+            <div class="kpi-card bg-green fade-in-card">
+                <div class="kpi-header">
+                    <h3>Клієнти</h3>
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="kpi-value" data-target="1234">0</div>
+                <div class="kpi-trend">+12% цього місяця</div>
+            </div>
+
+            <div class="kpi-card bg-teal fade-in-card">
+                <div class="kpi-header">
+                    <h3>Продажі</h3>
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="kpi-value">₴<span class="count-up" data-target="45678">0</span></div>
+                <div class="kpi-trend">+8% цього місяця</div>
+            </div>
+
+            <div class="kpi-card bg-purple fade-in-card">
+                <div class="kpi-header">
+                    <h3>Замовлення</h3>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div class="kpi-value" data-target="89">0</div>
+                <div class="kpi-trend">+15% цього місяця</div>
+            </div>
+        </section>
+
+        <section class="chart-section fade-in-card">
+            <div class="chart-header">
+                <h3>Аналітика продажів</h3>
+                <div class="chart-tabs">
+                    <button class="tab-btn" data-type="week">Тиждень</button>
+                    <button class="tab-btn active" data-type="month">Місяць</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
