@@ -1,0 +1,256 @@
+/* src/styles/inventory.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f4f7fa;
+}
+
+/* Бокове меню */
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #e1e5eb;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e1e5eb;
+  gap: 15px;
+}
+
+.logo-icon {
+  color: #007bff;
+  display: flex;
+  align-items: center;
+}
+
+.logo h2 {
+  font-size: 18px;
+  color: #333;
+}
+
+.logo span {
+  font-size: 12px;
+  color: #888;
+}
+
+.menu {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888;
+  padding: 0 20px 10px;
+  letter-spacing: 1px;
+}
+
+.menu-item {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #555;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #f0f4f8;
+}
+
+.menu-item.active {
+  background-color: #e6f0fa;
+  color: #007bff;
+  border-right: 3px solid #007bff;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+}
+
+/* Основний контент */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Шапка */
+.top-bar {
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e5eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.breadcrumbs {
+  color: #555;
+  font-size: 14px;
+}
+
+.divider {
+  color: #ccc;
+  margin: 0 10px;
+}
+
+.time {
+  color: #888;
+  font-size: 12px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bell-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Картки статистики */
+.stats-container {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+}
+
+.stat-card {
+  flex: 1;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-card.blue { background: linear-gradient(135deg, #007bff, #00d4ff); }
+.stat-card.green { background: linear-gradient(135deg, #28a745, #20c997); }
+.stat-card.purple { background: linear-gradient(135deg, #6f42c1, #a94442); }
+
+.stat-info h3 { 
+  font-size: 14px; 
+  font-weight: normal; 
+  margin-bottom: 10px; 
+  opacity: 0.9; 
+}
+.stat-value { 
+  font-size: 28px; 
+  font-weight: bold; 
+  margin-bottom: 5px; 
+}
+.stat-trend { 
+  font-size: 12px; 
+  opacity: 0.8; 
+}
+
+/* Таблиця товарів */
+.inventory-section {
+  background-color: #ffffff;
+  margin: 0 30px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.section-header h3 {
+  color: #333;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.inventory-table th, .inventory-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.inventory-table th {
+  background-color: #f8f9fa;
+  color: #666;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.inventory-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-badge.good { background-color: #d4edda; color: #155724; }
+.status-badge.warning { background-color: #fff3cd; color: #856404; }
+.status-badge.danger { background-color: #f8d7da; color: #721c24; }
+
+/* Анімація появи рядків */
+.fade-in-row {
+  opacity: 0;
+  animation: fadeInRow 0.5s ease-out forwards;
+}
+
+@keyframes fadeInRow {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
