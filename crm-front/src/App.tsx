@@ -1,23 +1,24 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Layout } from './components/layout/Layout';
 import { Dashboard } from './pages/Dashboard/Dashboard';
-import Inventory from './pages/Inventory'; // Підключає сторінку
+import Inventory from './pages/Inventory';
 import './styles/global.css';
+import "./styles/Dashboard/Dashboard.css";
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        {/* Якщо адреса просто / — показує головну */}
-        <Route path="/" element={<Dashboard />} />
-        
-        {/* Заглушка для сторінки клієнтів (поки там пусто, показує дашборд) */}
-        <Route path="/clients" element={<Dashboard />} />
-        
-        {/* Якщо адреса /products — показує cклад */}
-        <Route path="/products" element={<Inventory />} />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Layout>
+                <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/products" element={<Inventory />} />
+                    {/* Можна додати сторінку 404 або редирект */}
+                    <Route path="*" element={<Dashboard />} />
+                </Routes>
+            </Layout>
+        </Router>
+    );
 }
 
 export default App;

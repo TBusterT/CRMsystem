@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import { FiHome, FiUsers, FiBox, FiBell, FiUser } from 'react-icons/fi';
-import '../styles/inventory.css'; // Підключення стилів
+import React, { useState, useEffect } from 'react';
+import '../styles/inventory.css'; // РОЗКОМЕНТОВАНО: тепер стилі підключаються
 
 interface Product {
   id: string;
@@ -11,7 +10,7 @@ interface Product {
   status: string;
 }
 
-function Inventory() {
+const Inventory: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [stats, setStats] = useState({ totalItems: 0, totalValue: 0, totalCategories: 0 });
 
@@ -46,53 +45,26 @@ function Inventory() {
   }, []);
 
   return (
-    <div className="app-container">
-      {/* Бокове меню */}
-      <aside className="sidebar">
-        <div className="logo">
-          <div className="logo-icon"><FiBox size={24} /></div>
-          <div>
-            <h2>CRM Pro</h2>
-            <span>v2.1.0</span>
-          </div>
-        </div>
-        <nav className="menu">
-          <div className="menu-title">Меню</div>
-          <a href="/" className="menu-item"><span className="icon"><FiHome /></span> Головна</a>
-          <a href="/clients" className="menu-item"><span className="icon"><FiUsers /></span> Клієнти</a>
-          <a href="/products" className="menu-item active"><span className="icon"><FiBox /></span> Товари</a>
-        </nav>
-      </aside>
-
-      {/* Основний контент */}
-      <main className="main-content">
-        <header className="top-bar">
-          <div className="breadcrumbs">Панель управління <span className="divider">|</span> <span className="time">Останнє оновлення: щойно</span></div>
-          <div className="user-profile">
-            <button className="bell-btn"><FiBell /></button>
-            <div className="avatar"><FiUser /></div>
-          </div>
-        </header>
-
+      <>
         {/* Картки статистики */}
         <div className="stats-container">
-          <div className="stat-card blue">
+          <div className="stat-card blue"> {/* ВИПРАВЛЕНО КЛАС */}
             <div className="stat-info">
-              <h3>Всього товарів</h3>
+              <h3>Всього товарів <i className="fa-solid fa-box-open" style={{marginLeft: '8px', opacity: 0.7}}></i></h3>
               <div className="stat-value">{stats.totalItems.toLocaleString('uk-UA')}</div>
               <div className="stat-trend">На основі бази даних</div>
             </div>
           </div>
-          <div className="stat-card green">
+          <div className="stat-card green"> {/* ВИПРАВЛЕНО КЛАС */}
             <div className="stat-info">
-              <h3>Вартість складу</h3>
+              <h3>Вартість складу <i className="fa-solid fa-money-bill-wave" style={{marginLeft: '8px', opacity: 0.7}}></i></h3>
               <div className="stat-value">₴{stats.totalValue.toLocaleString('uk-UA')}</div>
               <div className="stat-trend">Автоматичний підрахунок</div>
             </div>
           </div>
-          <div className="stat-card purple">
+          <div className="stat-card purple"> {/* ВИПРАВЛЕНО КЛАС */}
             <div className="stat-info">
-              <h3>Категорії</h3>
+              <h3>Категорії <i className="fa-solid fa-layer-group" style={{marginLeft: '8px', opacity: 0.7}}></i></h3>
               <div className="stat-value">{stats.totalCategories}</div>
               <div className="stat-trend">Унікальні розділи</div>
             </div>
@@ -107,26 +79,26 @@ function Inventory() {
           <div className="table-container">
             <table className="inventory-table">
               <thead>
-                <tr>
-                  <th>SKU</th>
-                  <th>Назва товару</th>
-                  <th>Категорія</th>
-                  <th>Ціна</th>
-                  <th>Залишок</th>
-                  <th>Статус</th>
-                </tr>
+              <tr>
+                <th>SKU</th>
+                <th>Назва товару</th>
+                <th>Категорія</th>
+                <th>Ціна</th>
+                <th>Залишок</th>
+                <th>Статус</th>
+              </tr>
               </thead>
               <tbody>
-                {products.map((product, index) => {
-                  let statusClass = 'good';
-                  if (product.stock === 0) statusClass = 'danger';
-                  else if (product.stock < 5) statusClass = 'warning';
+              {products.map((product, index) => {
+                let statusClass = 'good';
+                if (product.stock === 0) statusClass = 'danger';
+                else if (product.stock < 5) statusClass = 'warning';
 
-                  return (
-                    <tr 
-                      key={product.id} 
-                      className="fade-in-row" 
-                      style={{ animationDelay: `${index * 0.1}s` }}
+                return (
+                    <tr
+                        key={product.id}
+                        className="fade-in-row"
+                        style={{ animationDelay: `${index * 0.1}s` }}
                     >
                       <td><strong>{product.id}</strong></td>
                       <td>{product.name}</td>
@@ -135,15 +107,14 @@ function Inventory() {
                       <td>{product.stock} шт.</td>
                       <td><span className={`status-badge ${statusClass}`}>{product.status}</span></td>
                     </tr>
-                  );
-                })}
+                );
+              })}
               </tbody>
             </table>
           </div>
         </div>
-      </main>
-    </div>
+      </>
   );
-}
+};
 
 export default Inventory;

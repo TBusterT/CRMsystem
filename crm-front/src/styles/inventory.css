@@ -1,208 +1,82 @@
 /* src/styles/inventory.css */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
 
-.app-container {
-  display: flex;
-  height: 100vh;
-  background-color: #f4f7fa;
-}
-
-/* Бокове меню */
-.sidebar {
-  width: 250px;
-  background-color: #ffffff;
-  border-right: 1px solid #e1e5eb;
-  display: flex;
-  flex-direction: column;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #e1e5eb;
-  gap: 15px;
-}
-
-.logo-icon {
-  color: #007bff;
-  display: flex;
-  align-items: center;
-}
-
-.logo h2 {
-  font-size: 18px;
-  color: #333;
-}
-
-.logo span {
-  font-size: 12px;
-  color: #888;
-}
-
-.menu {
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.menu-title {
-  font-size: 12px;
-  text-transform: uppercase;
-  color: #888;
-  padding: 0 20px 10px;
-  letter-spacing: 1px;
-}
-
-.menu-item {
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  color: #555;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.menu-item:hover {
-  background-color: #f0f4f8;
-}
-
-.menu-item.active {
-  background-color: #e6f0fa;
-  color: #007bff;
-  border-right: 3px solid #007bff;
-}
-
-.icon {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-}
-
-/* Основний контент */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-
-/* Шапка */
-.top-bar {
-  height: 60px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e1e5eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-}
-
-.breadcrumbs {
-  color: #555;
-  font-size: 14px;
-}
-
-.divider {
-  color: #ccc;
-  margin: 0 10px;
-}
-
-.time {
-  color: #888;
-  font-size: 12px;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.bell-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #555;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 35px;
-  height: 35px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Картки статистики */
+/* =========================================
+   КАРТКИ СТАТИСТИКИ
+   ========================================= */
 .stats-container {
   display: flex;
   gap: 20px;
-  padding: 30px;
+  margin-bottom: 24px;
+  width: 100%;
 }
 
 .stat-card {
   flex: 1;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 24px;
   color: white;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.stat-card.blue { background: linear-gradient(135deg, #007bff, #00d4ff); }
-.stat-card.green { background: linear-gradient(135deg, #28a745, #20c997); }
-.stat-card.purple { background: linear-gradient(135deg, #6f42c1, #a94442); }
+/* Точні градієнти як на макеті */
+.stat-card.blue { background: linear-gradient(135deg, #38bdf8, #3b82f6); }
+.stat-card.green { background: linear-gradient(135deg, #34d399, #10b981); }
+.stat-card.purple { background: linear-gradient(135deg, #a78bfa, #6366f1); }
 
-.stat-info h3 { 
-  font-size: 14px; 
-  font-weight: normal; 
-  margin-bottom: 10px; 
-  opacity: 0.9; 
-}
-.stat-value { 
-  font-size: 28px; 
-  font-weight: bold; 
-  margin-bottom: 5px; 
-}
-.stat-trend { 
-  font-size: 12px; 
-  opacity: 0.8; 
+.stat-info h3 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 12px 0;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
 }
 
-/* Таблиця товарів */
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.stat-trend {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* =========================================
+   ТАБЛИЦЯ ТОВАРІВ
+   ========================================= */
 .inventory-section {
   background-color: #ffffff;
-  margin: 0 30px 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03); /* М'яка тінь */
+  padding: 24px;
+  width: 100%;
 }
 
 .section-header {
-  padding: 20px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
 }
 
 .section-header h3 {
-  color: #333;
+  color: #1e293b;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
 }
 
+/* Контейнер зі скролом */
 .table-container {
   width: 100%;
-  overflow-x: auto;
+  max-height: 400px; /* Висота таблиці до появи скролу */
+  overflow-y: auto;  /* Вертикальний скрол */
+  overflow-x: auto;  /* Горизонтальний скрол (для вузьких екранів) */
+  border-radius: 8px;
 }
 
 .inventory-table {
@@ -211,46 +85,106 @@
   text-align: left;
 }
 
-.inventory-table th, .inventory-table td {
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
+/* Заголовки (з фіксацією при скролі) */
+.inventory-table th {
+  padding: 12px 16px;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #ffffff;
+
+  /* Фіксація шапки */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: inset 0 -1px 0 #f1f5f9; /* Лінія під шапкою */
 }
 
-.inventory-table th {
-  background-color: #f8f9fa;
-  color: #666;
-  font-weight: 600;
+/* Рядки таблиці */
+.inventory-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
   font-size: 14px;
 }
 
-.inventory-table tbody tr:hover {
-  background-color: #f8f9fa;
+.inventory-table tbody tr {
+  transition: background-color 0.2s;
 }
 
+.inventory-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+
+/* =========================================
+   СТАТУСИ (BADGES)
+   ========================================= */
 .status-badge {
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
 }
 
-.status-badge.good { background-color: #d4edda; color: #155724; }
-.status-badge.warning { background-color: #fff3cd; color: #856404; }
-.status-badge.danger { background-color: #f8d7da; color: #721c24; }
+.status-badge.good { background-color: #dcfce7; color: #16a34a; }
+.status-badge.warning { background-color: #fef3c7; color: #d97706; }
+.status-badge.danger { background-color: #fee2e2; color: #dc2626; }
 
-/* Анімація появи рядків */
+
+/* =========================================
+   АНІМАЦІЇ
+   ========================================= */
 .fade-in-row {
   opacity: 0;
   animation: fadeInRow 0.5s ease-out forwards;
 }
 
 @keyframes fadeInRow {
-  from { 
-    opacity: 0; 
-    transform: translateY(10px); 
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+/* =========================================
+   КАСТОМНИЙ СТІЛЬ СЬКРОЛУ (Світла тема)
+   ========================================= */
+
+/* Для Firefox */
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent; /* колір повзунка і прозорий фон */
+}
+
+/* Для Chrome, Safari та Edge */
+.table-container::-webkit-scrollbar {
+  width: 8px;  /* Товщина вертикального скролу */
+  height: 8px; /* Товщина горизонтального скролу */
+}
+
+/* Фон скролбара (доріжка) */
+.table-container::-webkit-scrollbar-track {
+  background: transparent; /* Робимо фон невидимим */
+  border-radius: 8px;
+}
+
+/* Сама "кнопка" (повзунок) скролу */
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0; /* Дуже світлий сірий колір, який виглядає як біла тема */
+  border-radius: 8px;
+  border: 2px solid #ffffff; /* Біла рамка створює ефект відступу від країв */
+}
+
+/* При наведенні на повзунок (робимо трохи темнішим для зручності) */
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #cbd5e1;
 }

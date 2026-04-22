@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 export const Sidebar: React.FC = () => {
     return (
@@ -12,26 +13,22 @@ export const Sidebar: React.FC = () => {
             </div>
             <nav className="menu">
                 <p className="menu-label">Меню</p>
-                <a href="/" className="menu-item active">
+                <NavLink to="/" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon blue-icon"><i className="fa-solid fa-house"></i></div>
                     <span>Головна</span>
-                </a>
-                <a href="/clients" className="menu-item">
+                </NavLink>
+                <NavLink to="/clients" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon green-icon"><i className="fa-solid fa-users"></i></div>
                     <span>Клієнти</span>
-                </a>
-                <a href="/inbox" className="menu-item">
-                    <div className="item-icon" style={{ backgroundColor: '#0ea5e9' }}><i className="fa-solid fa-message"></i></div>
-                    <span>Повідомлення</span>
-                </a>
-                <a href="/inventory" className="menu-item">
+                </NavLink>
+                <NavLink to="/inventory" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon purple-icon"><i className="fa-solid fa-box"></i></div>
                     <span>Товари</span>
-                </a>
-                <a href="/finance" className="menu-item">
+                </NavLink>
+                <NavLink to="/finance" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon" style={{ backgroundColor: '#f59e0b' }}><i className="fa-solid fa-wallet"></i></div>
                     <span>Фінанси</span>
-                </a>
+                </NavLink>
             </nav>
         </aside>
     );
