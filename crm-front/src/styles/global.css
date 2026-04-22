@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-color: #f5f7fb;
+    --sidebar-bg: #f8fafc;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --accent-blue: #3b82f6;
+    --accent-green: #10b981;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow: hidden; /* Забороняємо подвійний скрол */
+}
+
+/* ЖОРСТКИЙ ФІКС ДЛЯ VITE: змушуємо #root працювати як треба */
+#root {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    text-align: left; /* Перебиваємо дефолтне центрування Vite */
+}
+
+.fade-in-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
