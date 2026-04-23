@@ -1,0 +1,321 @@
+/* src/styles/clients.css */
+
+.clients-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Шапка сторінки клієнтів */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.header-titles {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-titles h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #1e293b;
+}
+
+.header-titles .divider {
+    color: #cbd5e1;
+    font-size: 20px;
+}
+
+.header-titles .subtitle {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.add-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.add-btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* KPI секція */
+.kpi-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 24px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Градієнти як на макеті */
+.kpi-card.bg-blue { background: linear-gradient(135deg, #38bdf8, #3b82f6); }
+.kpi-card.bg-green { background: linear-gradient(135deg, #34d399, #10b981); }
+.kpi-card.bg-purple { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.kpi-header h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.kpi-value {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Панель інструментів (Пошук та Фільтр) */
+
+.toolbar-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.search-box {
+    flex: 1; /* Завдяки цьому пошук розтягується на всю доступну ширину і не зменшується */
+    display: flex;
+    align-items: center;
+    background-color: #ffffff; /* Жорстко задаємо білий фон контейнеру */
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-box i {
+    color: #94a3b8;
+    margin-right: 12px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #1e293b;
+    background-color: #ffffff; /* Примусово білий фон для самого інпуту */
+    color-scheme: light; /* Забороняємо браузеру застосовувати темну тему до цього поля */
+}
+
+/* Хак для скидання чорного/жовтого фону, якщо браузер застосовує Автозаповнення (Autofill) */
+.search-box input:-webkit-autofill,
+.search-box input:-webkit-autofill:hover,
+.search-box input:-webkit-autofill:focus,
+.search-box input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    -webkit-text-fill-color: #1e293b !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.filter-box select {
+    /* ... (решту стилів для select залишаєш як було) ... */
+    padding: 12px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #1e293b;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    min-width: 160px;
+    color-scheme: light; /* Також фіксуємо світлу тему для дропдауну */
+}
+
+.filter-box select {
+    padding: 12px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    color: #1e293b;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    min-width: 160px;
+}
+
+/* Сітка карток клієнтів */
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.client-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.client-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+    border-color: #cbd5e1;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.client-header-left {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.client-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.client-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+}
+
+.client-info .company {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-active { background: #dcfce7; color: #16a34a; }
+.status-lead { background: #fef3c7; color: #d97706; }
+.status-nego { background: #e0e7ff; color: #4f46e5; }
+
+.contact-details {
+    margin-bottom: 24px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.contact-item i {
+    width: 14px;
+    color: #94a3b8;
+}
+
+.card-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ltv-info span {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.ltv-info strong {
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.card-actions button {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-actions button:hover {
+    background: #f8fafc;
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* Анімація появи */
+.fade-in-card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}

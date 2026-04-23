@@ -17,14 +17,23 @@ export const Sidebar: React.FC = () => {
                     <div className="item-icon blue-icon"><i className="fa-solid fa-house"></i></div>
                     <span>Головна</span>
                 </NavLink>
+
                 <NavLink to="/clients" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon green-icon"><i className="fa-solid fa-users"></i></div>
                     <span>Клієнти</span>
                 </NavLink>
+
+                {/* НОВА 5-ТА КНОПКА: Повідомлення */}
+                <NavLink to="/inbox" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
+                    <div className="item-icon" style={{ backgroundColor: '#0ea5e9' }}><i className="fa-solid fa-message"></i></div>
+                    <span>Повідомлення</span>
+                </NavLink>
+
                 <NavLink to="/inventory" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon purple-icon"><i className="fa-solid fa-box"></i></div>
                     <span>Товари</span>
                 </NavLink>
+
                 <NavLink to="/finance" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <div className="item-icon" style={{ backgroundColor: '#f59e0b' }}><i className="fa-solid fa-wallet"></i></div>
                     <span>Фінанси</span>
