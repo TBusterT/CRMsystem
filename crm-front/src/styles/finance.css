@@ -1,0 +1,176 @@
+/* src/styles/finance.css */
+
+.finance-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* --- СЕКЦІЯ ГРАФІКА (Імітація з макета) --- */
+.finance-chart-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    height: 300px;
+}
+
+.mock-chart-container {
+    display: flex;
+    height: 100%;
+    gap: 15px;
+}
+.finance-chart-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    height: 300px;
+}
+
+/* Тултип на графіку */
+.tooltip {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e293b transparent transparent transparent;
+}
+
+
+/* --- СЕКЦІЯ ТРАНЗАКЦІЙ --- */
+.transactions-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Компактний пошук для таблиці */
+
+.small-search {
+    width: 200px;
+    flex: none;   
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin: 0;
+    background-color: #f8fafc;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+}
+
+.small-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 14px;
+    color: #1e293b;
+    color-scheme: light;
+}
+
+/* Скидання фону для автозаповнення, щоб залишався світлим */
+.small-search input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
+    -webkit-text-fill-color: #1e293b !important;
+}
+
+/* --- ТАБЛИЦЯ --- */
+.finance-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.finance-table th {
+    padding: 14px 16px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.finance-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.date-cell, .category-cell {
+    color: #64748b !important;
+}
+
+.finance-table tbody tr {
+    transition: background-color 0.2s;
+}
+
+.finance-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+
+/* --- СТАТУСИ / БЕДЖІ --- */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    min-width: 80px;
+}
+
+.status-badge.good { background-color: #dcfce7; color: #16a34a; }
+.status-badge.danger { background-color: #fee2e2; color: #dc2626; }
+
+
+/* --- АНІМАЦІЯ --- */
+.fade-in-card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
