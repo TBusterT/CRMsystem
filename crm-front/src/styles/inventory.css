@@ -184,6 +184,7 @@
   border: 2px solid #ffffff; /* Біла рамка створює ефект відступу від країв */
 }
 
+
 /* При наведенні на повзунок (робимо трохи темнішим для зручності) */
 .table-container::-webkit-scrollbar-thumb:hover {
   background-color: #cbd5e1;
