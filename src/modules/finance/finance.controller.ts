@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+} from '@nestjs/common';
+
 import { FinanceService } from './finance.service';
 import { CreateFinanceDto } from './dto/create-finance.dto';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
@@ -19,16 +29,37 @@ export class FinanceController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.financeService.findOne(+id);
+    const item = this.financeService.findOne(+id);
+
+    if (!item) {
+      throw new NotFoundException(`Finance with id ${id} not found`);
+    }
+
+    return item;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFinanceDto: UpdateFinanceDto) {
-    return this.financeService.update(+id, updateFinanceDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateFinanceDto: UpdateFinanceDto,
+  ) {
+    const updated = this.financeService.update(+id, updateFinanceDto);
+
+    if (!updated) {
+      throw new NotFoundException(`Finance with id ${id} not found`);
+    }
+
+    return updated;
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.financeService.remove(+id);
+    const removed = this.financeService.remove(+id);
+
+    if (!removed) {
+      throw new NotFoundException(`Finance with id ${id} not found`);
+    }
+
+    return removed;
   }
 }
