@@ -1,223 +1,410 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import '../styles/inbox.css';
+import { messagingApi } from '../api/messaging.api';
+import type { Conversation, Message, MessagingPlatform } from '../api/messaging.api';
 
-// Типізація даних
-interface Message {
-    id: number;
-    text: string;
-    time: string;
-    isMine: boolean;
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const PLATFORM_META: Record<string, { icon: string; color: string; label: string }> = {
+    telegram: { icon: 'fa-telegram',  color: '#3b82f6', label: 'Telegram'  },
+    viber:    { icon: 'fa-viber',     color: '#a855f7', label: 'Viber'     },
+    whatsapp: { icon: 'fa-whatsapp',  color: '#22c55e', label: 'WhatsApp'  },
+};
+
+function formatTime(iso: string | null): string {
+    if (!iso) return '';
+    const date = new Date(iso);
+    const now  = new Date();
+    const isToday =
+        date.getDate()     === now.getDate()     &&
+        date.getMonth()    === now.getMonth()    &&
+        date.getFullYear() === now.getFullYear();
+    if (isToday) {
+        return date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+    }
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday =
+        date.getDate()     === yesterday.getDate()     &&
+        date.getMonth()    === yesterday.getMonth()    &&
+        date.getFullYear() === yesterday.getFullYear();
+    return isYesterday ? 'Вчора' : date.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' });
 }
 
-interface Chat {
-    id: number;
-    name: string;
-    status: string;
-    unread: number;
-    messages: Message[];
+function getInitial(name: string | null): string {
+    return (name || '?').charAt(0).toUpperCase();
 }
 
-interface Channel {
-    id: string;
-    name: string;
-    totalUnread: number;
-    icon: string;
-    iconColor: string;
-    chats: Chat[];
-}
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+const LoadingDots: React.FC = () => (
+    <div style={{ display: 'flex', gap: 6, padding: '20px 30px' }}>
+        {[0, 1, 2].map(i => (
+            <div key={i} style={{
+                width: 8, height: 8, borderRadius: '50%',
+                background: '#cbd5e1',
+                animation: 'pulse 1.4s ease-in-out infinite',
+                animationDelay: `${i * 0.2}s`,
+            }} />
+        ))}
+    </div>
+);
+
+const ErrorBanner: React.FC<{ message: string; onRetry: () => void }> = ({ message, onRetry }) => (
+    <div style={{
+        margin: '12px 16px', padding: '10px 14px',
+        background: '#fef2f2', border: '1px solid #fecaca',
+        borderRadius: 10, color: '#ef4444',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+        fontSize: 13,
+    }}>
+        <span><i className="fa-solid fa-circle-exclamation" style={{ marginRight: 8 }} />{message}</span>
+        <button onClick={onRetry} style={{
+            background: 'none', border: '1px solid #fca5a5', color: '#ef4444',
+            borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12,
+        }}>Повторити</button>
+    </div>
+);
+
+// ─── Main component ───────────────────────────────────────────────────────────
 
 const Inbox: React.FC = () => {
-    // Імітація бази даних повідомлень
-    const [channels] = useState<Channel[]>([
-        {
-            id: 'telegram',
-            name: 'Telegram',
-            totalUnread: 12,
-            icon: 'fa-telegram',
-            iconColor: '#3b82f6',
-            chats: [
-                {
-                    id: 1, name: 'Іван Петров', status: 'Онлайн', unread: 2, messages: [
-                        { id: 1, text: 'Добрий день! Мені потрібна консультація щодо ваших послуг.', time: '14:30', isMine: false },
-                        { id: 2, text: 'Звичайно! Розкажіть, що вас цікавить?', time: '14:32', isMine: true },
-                        { id: 3, text: 'Мені потрібен детальний розрахунок вартості для мого проекту.', time: '14:35', isMine: false }
-                    ]
-                },
-                {
-                    id: 2, name: 'Олена Ткач', status: 'Була нещодавно', unread: 0, messages: [
-                        { id: 1, text: 'Дякую, документи отримала.', time: 'Вчора', isMine: false }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'whatsapp',
-            name: 'WhatsApp',
-            totalUnread: 8,
-            icon: 'fa-whatsapp',
-            iconColor: '#22c55e',
-            chats: [
-                {
-                    id: 3, name: 'ТОВ БудЕксперт', status: 'Офлайн', unread: 5, messages: [
-                        { id: 1, text: 'Коли очікувати поставку?', time: '09:15', isMine: false }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'viber',
-            name: 'Viber',
-            totalUnread: 5,
-            icon: 'fa-viber',
-            iconColor: '#a855f7',
-            chats: []
+    const [conversations, setConversations]   = useState<Conversation[]>([]);
+    const [convsLoading, setConvsLoading]     = useState(true);
+    const [convsError, setConvsError]         = useState<string | null>(null);
+
+    const [activePlatform, setActivePlatform] = useState<string>('all');
+    const [activeConvId, setActiveConvId]     = useState<number | null>(null);
+
+    const [messages, setMessages]             = useState<Message[]>([]);
+    const [msgsLoading, setMsgsLoading]       = useState(false);
+    const [msgsError, setMsgsError]           = useState<string | null>(null);
+
+    const [messageInput, setMessageInput]     = useState('');
+    const [sending, setSending]               = useState(false);
+    const [sendError, setSendError]           = useState<string | null>(null);
+
+    const [stats, setStats]                   = useState<Record<string, number>>({});
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const pollRef        = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Load conversations
+    const loadConversations = useCallback(async (platform?: string) => {
+        setConvsLoading(true);
+        setConvsError(null);
+        try {
+            const data = await messagingApi.getConversations(
+                platform && platform !== 'all' ? platform : undefined,
+            );
+            setConversations(data);
+            setActiveConvId(prev => {
+                if (prev === null && data.length > 0) return data[0].id;
+                return prev;
+            });
+        } catch (e: any) {
+            setConvsError(e.message ?? 'Не вдалось завантажити розмови');
+        } finally {
+            setConvsLoading(false);
         }
-    ]);
+    }, []);
 
-    // Стани для активного каналу та чату
-    const [activeChannelId, setActiveChannelId] = useState<string>('telegram');
-    const [activeChatId, setActiveChatId] = useState<number>(1);
-    const [messageInput, setMessageInput] = useState<string>('');
+    // Load stats
+    const loadStats = useCallback(async () => {
+        try {
+            const s = await messagingApi.getStats();
+            const map: Record<string, number> = {};
+            s.byPlatform.forEach(p => { map[p.platform] = Number(p.count); });
+            map['all'] = s.open;
+            setStats(map);
+        } catch { /* non-critical */ }
+    }, []);
 
-    // Знаходимо поточні активні дані
-    const activeChannel = channels.find(c => c.id === activeChannelId);
-    const activeChat = activeChannel?.chats.find(c => c.id === activeChatId);
+    // Load messages
+    const loadMessages = useCallback(async (convId: number) => {
+        setMsgsLoading(true);
+        setMsgsError(null);
+        try {
+            const data = await messagingApi.getMessages(convId);
+            setMessages(data);
+        } catch (e: any) {
+            setMsgsError(e.message ?? 'Не вдалось завантажити повідомлення');
+        } finally {
+            setMsgsLoading(false);
+        }
+    }, []);
 
-    // Зміна каналу
-    const handleChannelClick = (channelId: string) => {
-        setActiveChannelId(channelId);
-        // При перемиканні каналу автоматично відкриваємо перший чат у списку (якщо він є)
-        const channel = channels.find(c => c.id === channelId);
-        if (channel && channel.chats.length > 0) {
-            setActiveChatId(channel.chats[0].id);
-        } else {
-            setActiveChatId(0); // Немає чатів
+    useEffect(() => { loadConversations(); loadStats(); }, [loadConversations, loadStats]);
+    useEffect(() => { if (activeConvId !== null) loadMessages(activeConvId); }, [activeConvId, loadMessages]);
+    useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+    // Polling every 5s
+    useEffect(() => {
+        if (activeConvId === null) return;
+        pollRef.current = setInterval(() => {
+            messagingApi.getMessages(activeConvId)
+                .then(data => setMessages(data))
+                .catch(() => {});
+        }, 5000);
+        return () => { if (pollRef.current) clearInterval(pollRef.current); };
+    }, [activeConvId]);
+
+    const handlePlatformClick = (platform: string) => {
+        setActivePlatform(platform);
+        setActiveConvId(null);
+        setMessages([]);
+        loadConversations(platform === 'all' ? undefined : platform);
+    };
+
+    const handleSend = async () => {
+        if (!messageInput.trim() || activeConvId === null || sending) return;
+        const text = messageInput.trim();
+        setMessageInput('');
+        setSendError(null);
+        setSending(true);
+
+        const optimistic: Message = {
+            id: Date.now(), conversationId: activeConvId,
+            externalMessageId: null, direction: 'outbound', contentType: 'text',
+            text, mediaUrl: null, fileName: null, status: 'sent',
+            sentByUserId: null, platformTimestamp: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, optimistic]);
+
+        try {
+            const saved = await messagingApi.sendMessage({ conversationId: activeConvId, text });
+            setMessages(prev => prev.map(m => m.id === optimistic.id ? saved : m));
+            setConversations(prev =>
+                prev.map(c => c.id === activeConvId
+                    ? { ...c, lastMessageText: text, lastMessageAt: new Date().toISOString() }
+                    : c)
+            );
+        } catch (e: any) {
+            setSendError(e.message ?? 'Не вдалось надіслати');
+            setMessages(prev => prev.filter(m => m.id !== optimistic.id));
+        } finally {
+            setSending(false);
         }
     };
 
+    const activeConv     = conversations.find(c => c.id === activeConvId) ?? null;
+    const filteredConvs  = activePlatform === 'all'
+        ? conversations
+        : conversations.filter(c => c.platform === activePlatform);
+
+    // ── Render ────────────────────────────────────────────────────────────────
     return (
         <div className="inbox-container fade-in-card">
 
-            {/* Ліва панель: Канали та Чати */}
+            {/* LEFT SIDEBAR */}
             <div className="inbox-sidebar">
                 <div className="inbox-header">
-                    <div className="inbox-logo">
-                        <i className="fa-solid fa-inbox"></i>
-                    </div>
+                    <div className="inbox-logo"><i className="fa-solid fa-inbox" /></div>
                     <div>
                         <h2>Inbox</h2>
-                        <span>42 нових</span>
+                        <span>{stats['all'] ? `${stats['all']} відкритих` : 'Завантаження...'}</span>
                     </div>
                 </div>
 
                 <div className="sidebar-section">
                     <h3 className="section-title">Канали</h3>
                     <div className="channels-list">
-                        {channels.map(channel => (
+                        <div
+                            className={`channel-item ${activePlatform === 'all' ? 'active' : ''}`}
+                            onClick={() => handlePlatformClick('all')}
+                        >
+                            <div className="channel-icon" style={{ backgroundColor: '#f1f5f9', color: '#64748b' }}>
+                                <i className="fa-solid fa-layer-group" />
+                            </div>
+                            <div className="channel-info">
+                                <span className="channel-name">Всі канали</span>
+                                <span className="channel-unread">{stats['all'] ?? '—'} відкритих</span>
+                            </div>
+                        </div>
+                        {(Object.entries(PLATFORM_META) as [MessagingPlatform, typeof PLATFORM_META[string]][]).map(([id, meta]) => (
                             <div
-                                key={channel.id}
-                                className={`channel-item ${activeChannelId === channel.id ? 'active' : ''}`}
-                                onClick={() => handleChannelClick(channel.id)}
+                                key={id}
+                                className={`channel-item ${activePlatform === id ? 'active' : ''}`}
+                                onClick={() => handlePlatformClick(id)}
                             >
-                                <div className="channel-icon" style={{ backgroundColor: `${channel.iconColor}15`, color: channel.iconColor }}>
-                                    <i className={`fa-brands ${channel.icon}`}></i>
+                                <div className="channel-icon" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
+                                    <i className={`fa-brands ${meta.icon}`} />
                                 </div>
                                 <div className="channel-info">
-                                    <span className="channel-name">{channel.name}</span>
-                                    <span className="channel-unread">{channel.totalUnread} нових</span>
+                                    <span className="channel-name">{meta.label}</span>
+                                    <span className="channel-unread">{stats[id] !== undefined ? `${stats[id]} розмов` : '—'}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Список чатів для вибраного каналу */}
                 <div className="sidebar-section chats-section">
-                    <h3 className="section-title">Чати ({activeChannel?.name})</h3>
+                    <h3 className="section-title">
+                        Чати{activePlatform !== 'all' ? ` · ${PLATFORM_META[activePlatform]?.label}` : ''}
+                    </h3>
+                    {convsError && <ErrorBanner message={convsError} onRetry={() => loadConversations(activePlatform === 'all' ? undefined : activePlatform)} />}
                     <div className="chats-list">
-                        {activeChannel?.chats.length === 0 ? (
+                        {convsLoading ? <LoadingDots /> : filteredConvs.length === 0 ? (
                             <p className="no-chats">Немає активних чатів</p>
-                        ) : (
-                            activeChannel?.chats.map(chat => (
+                        ) : filteredConvs.map(conv => {
+                            const meta = PLATFORM_META[conv.platform];
+                            return (
                                 <div
-                                    key={chat.id}
-                                    className={`chat-item ${activeChatId === chat.id ? 'active' : ''}`}
-                                    onClick={() => setActiveChatId(chat.id)}
+                                    key={conv.id}
+                                    className={`chat-item ${activeConvId === conv.id ? 'active' : ''}`}
+                                    onClick={() => setActiveConvId(conv.id)}
                                 >
-                                    <div className="chat-avatar">
-                                        {chat.name.charAt(0)}
+                                    <div className="chat-avatar" style={{ position: 'relative' }}>
+                                        {conv.avatarUrl
+                                            ? <img src={conv.avatarUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                            : getInitial(conv.contactName)
+                                        }
+                                        {meta && (
+                                            <span style={{
+                                                position: 'absolute', bottom: -2, right: -2,
+                                                width: 16, height: 16, borderRadius: '50%',
+                                                background: meta.color, display: 'flex',
+                                                alignItems: 'center', justifyContent: 'center',
+                                                fontSize: 9, color: 'white', border: '1.5px solid white',
+                                            }}>
+                                                <i className={`fa-brands ${meta.icon}`} />
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="chat-info">
                                         <div className="chat-name-row">
-                                            <span className="chat-name">{chat.name}</span>
-                                            {chat.unread > 0 && <span className="chat-badge">{chat.unread}</span>}
+                                            <span className="chat-name">{conv.contactName || conv.contactHandle || '(без імені)'}</span>
+                                            <span style={{ fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' }}>
+                                                {formatTime(conv.lastMessageAt)}
+                                            </span>
                                         </div>
-                                        <span className="chat-preview">
-                                            {chat.messages[chat.messages.length - 1]?.text || 'Немає повідомлень'}
-                                        </span>
+                                        <span className="chat-preview">{conv.lastMessageText || 'Немає повідомлень'}</span>
                                     </div>
                                 </div>
-                            ))
-                        )}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
 
-            {/* Права панель: Вікно повідомлень */}
+            {/* CHAT AREA */}
             <div className="inbox-chat-area">
-                {activeChat ? (
+                {activeConv ? (
                     <>
-                        {/* Шапка чату */}
                         <div className="chat-header">
                             <div className="chat-user-info">
-                                <div className="chat-avatar">{activeChat.name.charAt(0)}</div>
+                                <div className="chat-avatar">
+                                    {activeConv.avatarUrl
+                                        ? <img src={activeConv.avatarUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                        : getInitial(activeConv.contactName)
+                                    }
+                                </div>
                                 <div>
-                                    <h3>{activeChat.name}</h3>
-                                    <span>{activeChat.status}</span>
+                                    <h3>{activeConv.contactName || activeConv.contactHandle || '(без імені)'}</h3>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                        {PLATFORM_META[activeConv.platform] && (
+                                            <i className={`fa-brands ${PLATFORM_META[activeConv.platform].icon}`}
+                                               style={{ color: PLATFORM_META[activeConv.platform].color, fontSize: 13 }} />
+                                        )}
+                                        {activeConv.contactHandle || activeConv.platform}
+                                        {activeConv.status === 'closed' && (
+                                            <span style={{ marginLeft: 6, fontSize: 11, padding: '1px 7px', background: '#f1f5f9', borderRadius: 20, color: '#64748b' }}>закрито</span>
+                                        )}
+                                    </span>
                                 </div>
                             </div>
                             <div className="chat-actions">
-                                <button className="icon-btn"><i className="fa-solid fa-phone"></i></button>
-                                <button className="icon-btn"><i className="fa-solid fa-video"></i></button>
+                                {activeConv.status !== 'closed' && (
+                                    <button className="icon-btn" title="Закрити розмову" onClick={async () => {
+                                        await messagingApi.close(activeConv.id);
+                                        setConversations(prev => prev.map(c => c.id === activeConv.id ? { ...c, status: 'closed' } : c));
+                                    }}>
+                                        <i className="fa-solid fa-check" />
+                                    </button>
+                                )}
+                                <button className="icon-btn" title="Оновити" onClick={() => loadMessages(activeConv.id)}>
+                                    <i className={`fa-solid fa-rotate-right ${msgsLoading ? 'fa-spin' : ''}`} />
+                                </button>
                             </div>
                         </div>
 
-                        {/* Зона повідомлень */}
                         <div className="chat-messages">
-                            {activeChat.messages.map(msg => (
-                                <div key={msg.id} className={`message-wrapper ${msg.isMine ? 'mine' : 'theirs'}`}>
-                                    {!msg.isMine && <div className="message-avatar">{activeChat.name.charAt(0)}</div>}
-                                    <div className="message-content">
-                                        <div className="message-bubble">
-                                            <p>{msg.text}</p>
+                            {msgsError && <ErrorBanner message={msgsError} onRetry={() => loadMessages(activeConv.id)} />}
+                            {msgsLoading && messages.length === 0 ? <LoadingDots /> : messages.length === 0 ? (
+                                <div style={{ textAlign: 'center', color: '#94a3b8', marginTop: 40, fontSize: 14 }}>Ще немає повідомлень</div>
+                            ) : messages.map(msg => {
+                                const isMine = msg.direction === 'outbound';
+                                return (
+                                    <div key={msg.id} className={`message-wrapper ${isMine ? 'mine' : 'theirs'}`}>
+                                        {!isMine && <div className="message-avatar">{getInitial(activeConv.contactName)}</div>}
+                                        <div className="message-content">
+                                            <div className="message-bubble">
+                                                {msg.contentType === 'image' && msg.mediaUrl && (
+                                                    <img src={msg.mediaUrl} alt="фото" style={{ maxWidth: 200, borderRadius: 8, display: 'block', marginBottom: msg.text ? 8 : 0 }} />
+                                                )}
+                                                {msg.contentType === 'file' && msg.mediaUrl && (
+                                                    <a href={msg.mediaUrl} target="_blank" rel="noreferrer"
+                                                       style={{ display: 'flex', alignItems: 'center', gap: 6, color: isMine ? 'rgba(255,255,255,0.9)' : '#3b82f6', fontSize: 13 }}>
+                                                        <i className="fa-solid fa-file" />{msg.fileName || 'Файл'}
+                                                    </a>
+                                                )}
+                                                {msg.contentType === 'sticker' && msg.mediaUrl && (
+                                                    <img src={msg.mediaUrl} alt="стікер" style={{ width: 80 }} />
+                                                )}
+                                                {msg.text && <p>{msg.text}</p>}
+                                            </div>
+                                            <span className="message-time">
+                                                {formatTime(msg.platformTimestamp)}
+                                                {isMine && (
+                                                    <i className={`fa-solid fa-check${msg.status === 'read' ? '-double' : ''}`}
+                                                       style={{ marginLeft: 4, opacity: 0.6, fontSize: 10 }} />
+                                                )}
+                                            </span>
                                         </div>
-                                        <span className="message-time">{msg.time}</span>
+                                        {isMine && <div className="message-avatar mine-avatar"><i className="fa-solid fa-user" /></div>}
                                     </div>
-                                    {msg.isMine && <div className="message-avatar mine-avatar"><i className="fa-solid fa-user"></i></div>}
-                                </div>
-                            ))}
+                                );
+                            })}
+                            <div ref={messagesEndRef} />
                         </div>
 
-                        {/* Введення повідомлення */}
+                        {sendError && (
+                            <div style={{ padding: '0 30px 8px', fontSize: 12, color: '#ef4444' }}>
+                                <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: 5 }} />{sendError}
+                            </div>
+                        )}
+
                         <div className="chat-input-area">
                             <div className="input-wrapper">
-                                <button className="attach-btn"><i className="fa-solid fa-paperclip"></i></button>
+                                <button className="attach-btn"><i className="fa-solid fa-paperclip" /></button>
                                 <input
                                     type="text"
-                                    placeholder="Введіть повідомлення..."
+                                    placeholder={activeConv.status === 'closed' ? 'Розмова закрита' : 'Введіть повідомлення...'}
                                     value={messageInput}
-                                    onChange={(e) => setMessageInput(e.target.value)}
-                                    onKeyDown={(e) => { if (e.key === 'Enter') setMessageInput(''); }}
+                                    disabled={activeConv.status === 'closed' || sending}
+                                    onChange={e => setMessageInput(e.target.value)}
+                                    onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) handleSend(); }}
                                 />
-                                <button className="emoji-btn"><i className="fa-regular fa-face-smile"></i></button>
-                                <button className="send-btn" onClick={() => setMessageInput('')}><i className="fa-solid fa-paper-plane"></i></button>
+                                <button className="emoji-btn"><i className="fa-regular fa-face-smile" /></button>
+                                <button
+                                    className="send-btn"
+                                    disabled={!messageInput.trim() || activeConv.status === 'closed' || sending}
+                                    onClick={handleSend}
+                                    style={{ opacity: (!messageInput.trim() || sending) ? 0.5 : 1 }}
+                                >
+                                    {sending ? <i className="fa-solid fa-circle-notch fa-spin" /> : <i className="fa-solid fa-paper-plane" />}
+                                </button>
                             </div>
                         </div>
                     </>
                 ) : (
                     <div className="empty-chat-state">
-                        <div className="empty-icon"><i className="fa-regular fa-comments"></i></div>
-                        <h3>Оберіть чат для початку спілкування</h3>
+                        <div className="empty-icon"><i className="fa-regular fa-comments" /></div>
+                        <h3>
+                            {convsLoading ? 'Завантаження...' : conversations.length === 0 ? 'Поки немає повідомлень' : 'Оберіть чат для початку спілкування'}
+                        </h3>
                     </div>
                 )}
             </div>
